@@ -1,8 +1,16 @@
+using DbServiceLib;
+using Microsoft.Extensions.DependencyInjection;
+
 var folder = Environment.CurrentDirectory;
 var parentFolder = Directory.GetParent(folder);
 Console.WriteLine(parentFolder.FullName);
 
 var builder = WebApplication.CreateBuilder(args);
+
+//使用依赖注入注册服务
+builder.Services.AddSingleton<IDbService, DbService>();
+
+
 
 // Add services to the container.
 

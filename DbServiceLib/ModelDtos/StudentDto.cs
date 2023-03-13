@@ -1,18 +1,22 @@
-﻿using System;
+﻿using DbServiceLib.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace DbServiceLib.Models
+namespace DbServiceLib.ModelDtos
 {
-    public class Student
+    public class StudentDto
     {
         public int PkId { get; set; }
         public string Name { get; set; }
         public bool Gender { get; set; }
         public int Age { get; set; }
-        public virtual List<Subject> Subjects { get; set; }
+
+        public Student ToStudent()
+        {
+            return new Student {PkId= PkId, Name = Name, Gender=Gender, Age=Age};
+        }
     }
 }
