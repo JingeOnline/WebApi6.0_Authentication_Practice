@@ -11,14 +11,16 @@ namespace DbServiceLib.ModelDtos
     public class StudentDto
     {
 
-        public int PkId { get; set; }
+        [Required(ErrorMessage ="Name is required.")]
         public string Name { get; set; }
+        [Required(ErrorMessage ="Gender is required.")]
         public bool Gender { get; set; }
+        [Range(0,150)]
         public int Age { get; set; }
 
         public Student ToStudent()
         {
-            return new Student {PkId= PkId, Name = Name, Gender=Gender, Age=Age};
+            return new Student {Name = Name, Gender=Gender, Age=Age};
         }
     }
 }
