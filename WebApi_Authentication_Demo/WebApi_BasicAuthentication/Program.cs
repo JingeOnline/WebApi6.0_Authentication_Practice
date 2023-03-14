@@ -30,3 +30,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+//回去看看这个教程：
+https://code-maze.com/net-core-web-development-part6/
