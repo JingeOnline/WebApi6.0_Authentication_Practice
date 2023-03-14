@@ -1,6 +1,7 @@
 ﻿using DbServiceLib.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace DbServiceLib.ModelDtos
 {
     public class StudentDto
     {
+
         public int PkId { get; set; }
         public string Name { get; set; }
         public bool Gender { get; set; }

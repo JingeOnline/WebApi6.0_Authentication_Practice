@@ -18,7 +18,7 @@ namespace DbServiceLib
             }
             else
             {
-                return new SubjectDto { PkId = subject.PkId, Name = subject.Name, Description = subject.Description };
+                return new SubjectDto { Name = subject.Name, Description = subject.Description };
             }
         }
         public static StudentDto ToDto(this Student student)
@@ -29,7 +29,7 @@ namespace DbServiceLib
             }
             else
             {
-                return new StudentDto { PkId = student.PkId, Name = student.Name, Age = student.Age, Gender = student.Gender };
+                return new StudentDto { Name = student.Name, Age = student.Age, Gender = student.Gender };
             }
         }
     }

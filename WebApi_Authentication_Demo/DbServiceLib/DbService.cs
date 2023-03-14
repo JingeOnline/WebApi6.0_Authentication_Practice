@@ -39,9 +39,8 @@ namespace DbServiceLib
             }
             catch
             {
-                return null;
+                throw;
             }
-
         }
         public Subject AddSubject(Subject subject)
         {
@@ -53,9 +52,8 @@ namespace DbServiceLib
             }
             catch
             {
-                return null;
+                throw;
             }
-
         }
         public Student UpdateStudent(Student student)
         {

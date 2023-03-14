@@ -22,7 +22,7 @@ namespace WebApi_BasicAuthentication.Controllers
         [HttpGet]
         public IEnumerable<StudentDto> Get()
         {
-            return _dbService.GetStudentsAll().Select(x=>x.ToDto());
+            return _dbService.GetStudentsAll().Select(x => x.ToDto());
         }
 
         // GET api/<StudentController>/5
@@ -34,9 +34,26 @@ namespace WebApi_BasicAuthentication.Controllers
 
         // POST api/<StudentController>
         [HttpPost]
-        public StudentDto Post([FromBody] StudentDto studentDto)
+        public IActionResult Post([FromBody] StudentDto studentDto)
         {
-            return _dbService.AddStudent(studentDto.ToStudent()).ToDto();
+            ModelState.Remove("PkId");
+            try
+            {
+                StudentDto dto = _dbService.AddStudent(studentDto.ToStudent()).ToDto();
+                if (dto != null)
+                {
+                    return Ok(dto);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+
         }
 
         // PUT api/<StudentController>/5
@@ -49,8 +66,8 @@ namespace WebApi_BasicAuthentication.Controllers
         [HttpDelete("{pkid}")]
         public IActionResult Delete(int pkid)
         {
-            string error= _dbService.RemoveStudent(pkid);
-            if(error==null)
+            string error = _dbService.RemoveStudent(pkid);
+            if (error == null)
             {
                 return Ok();
             }

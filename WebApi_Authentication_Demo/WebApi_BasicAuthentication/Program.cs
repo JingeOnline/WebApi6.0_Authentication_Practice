@@ -1,4 +1,4 @@
-using DbServiceLib;
+锘縰sing DbServiceLib;
 using Microsoft.Extensions.DependencyInjection;
 
 var folder = Environment.CurrentDirectory;
@@ -7,13 +7,10 @@ Console.WriteLine(parentFolder.FullName);
 
 var builder = WebApplication.CreateBuilder(args);
 
-//使用依赖注入注册服务
+//娣诲姞渚濊禆娉ㄥ叆
 builder.Services.AddSingleton<IDbService, DbService>();
 
-
-
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
