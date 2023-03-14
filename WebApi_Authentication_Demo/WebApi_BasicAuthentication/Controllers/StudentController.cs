@@ -47,9 +47,17 @@ namespace WebApi_BasicAuthentication.Controllers
 
         // DELETE api/<StudentController>/5
         [HttpDelete("{pkid}")]
-        public void Delete(int pkid)
+        public IActionResult Delete(int pkid)
         {
-            _dbService.RemoveStudent(pkid);
+            string error= _dbService.RemoveStudent(pkid);
+            if(error==null)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(error);
+            }
         }
     }
 }

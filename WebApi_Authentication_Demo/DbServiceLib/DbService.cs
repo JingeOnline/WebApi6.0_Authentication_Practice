@@ -31,15 +31,31 @@ namespace DbServiceLib
         }
         public Student AddStudent(Student student)
         {
-            _context.Students.Add(student);
-            _context.SaveChanges();
-            return student;
+            try
+            {
+                _context.Students.Add(student);
+                _context.SaveChanges();
+                return student;
+            }
+            catch
+            {
+                return null;
+            }
+
         }
         public Subject AddSubject(Subject subject)
         {
-            _context.Subjects.Add(subject);
-            _context.SaveChanges();
-            return subject;
+            try
+            {
+                _context.Subjects.Add(subject);
+                _context.SaveChanges();
+                return subject;
+            }
+            catch
+            {
+                return null;
+            }
+
         }
         public Student UpdateStudent(Student student)
         {
@@ -58,7 +74,7 @@ namespace DbServiceLib
                 return null;
             }
         }
-        public bool RemoveStudent(int pkid)
+        public string RemoveStudent(int pkid)
         {
             Student student = _context.Students.FirstOrDefault(x => x.PkId == pkid);
             if (student != null)
@@ -67,19 +83,19 @@ namespace DbServiceLib
                 {
                     _context.Students.Remove(student);
                     _context.SaveChanges();
-                    return true;
+                    return null;
                 }
-                catch
+                catch(Exception ex)
                 { 
-                    return false; 
+                    return ex.Message; 
                 }
             }
             else
             {
-                return false;
+                return $"The student pkid={pkid} is not exist.";
             }
         }
-        public bool RemoveSubject(int pkid)
+        public string RemoveSubject(int pkid)
         {
             Subject subject= _context.Subjects.FirstOrDefault(x => x.PkId == pkid);
             if(subject != null)
@@ -88,16 +104,16 @@ namespace DbServiceLib
                 {
                     _context.Subjects.Remove(subject);
                     _context.SaveChanges();
-                    return true;
+                    return null;
                 }
-                catch
+                catch(Exception ex)
                 {
-                    return false;
+                    return ex.Message;
                 }
             }
             else
             {
-                return false;
+                return $"The subject pkid={pkid} is not exist.";
             }
         }
     }
