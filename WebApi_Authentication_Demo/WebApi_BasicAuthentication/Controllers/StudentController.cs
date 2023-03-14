@@ -20,9 +20,18 @@ namespace WebApi_BasicAuthentication.Controllers
 
         // GET: api/<StudentController>
         [HttpGet]
-        public IEnumerable<StudentDto> Get()
+        public IActionResult Get()
         {
-            return _dbService.GetStudentsAll().Select(x => x.ToDto());
+            try
+            {
+                IEnumerable<StudentDto> studentDtos=_dbService.GetStudentsAll().Select(x => x.ToDto());
+                return Ok(studentDtos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
         }
 
         // GET api/<StudentController>/5
@@ -36,7 +45,6 @@ namespace WebApi_BasicAuthentication.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] StudentDto studentDto)
         {
-            ModelState.Remove("PkId");
             try
             {
                 StudentDto dto = _dbService.AddStudent(studentDto.ToStudent()).ToDto();
