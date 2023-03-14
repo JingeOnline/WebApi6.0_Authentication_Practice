@@ -35,6 +35,12 @@ namespace DbServiceLib
             _context.SaveChanges();
             return student;
         }
+        public Subject AddSubject(Subject subject)
+        {
+            _context.Subjects.Add(subject);
+            _context.SaveChanges();
+            return subject;
+        }
         public Student UpdateStudent(Student student)
         {
             Student stu = _context.Students.FirstOrDefault(x => x.PkId == student.PkId);
@@ -73,6 +79,26 @@ namespace DbServiceLib
                 return false;
             }
         }
-
+        public bool RemoveSubject(int pkid)
+        {
+            Subject subject= _context.Subjects.FirstOrDefault(x => x.PkId == pkid);
+            if(subject != null)
+            {
+                try
+                {
+                    _context.Subjects.Remove(subject);
+                    _context.SaveChanges();
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

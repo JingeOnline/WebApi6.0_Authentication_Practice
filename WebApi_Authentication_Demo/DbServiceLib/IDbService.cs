@@ -14,7 +14,9 @@ namespace DbServiceLib
         Student GetStudent(int pkid);
         Subject GetSubject(int pkid);
         Student AddStudent(Student student);
+        Subject AddSubject(Subject subject);
         Student UpdateStudent(Student student);
         bool RemoveStudent(int pkid);
+        bool RemoveSubject(int pkid);
     }
 }

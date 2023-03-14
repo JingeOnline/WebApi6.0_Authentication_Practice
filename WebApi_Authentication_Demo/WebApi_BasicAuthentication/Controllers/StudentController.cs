@@ -1,4 +1,5 @@
 ﻿using DbServiceLib;
+using DbServiceLib.ModelDtos;
 using DbServiceLib.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,23 +20,23 @@ namespace WebApi_BasicAuthentication.Controllers
 
         // GET: api/<StudentController>
         [HttpGet]
-        public IEnumerable<Student> Get()
+        public IEnumerable<StudentDto> Get()
         {
-            return _dbService.GetStudentsAll();
+            return _dbService.GetStudentsAll().Select(x=>x.ToDto());
         }
 
         // GET api/<StudentController>/5
         [HttpGet("{pkid}")]
-        public string Get(int id)
+        public StudentDto Get(int pkId)
         {
-            return "value";
+            return _dbService.GetStudent(pkId).ToDto();
         }
 
         // POST api/<StudentController>
         [HttpPost]
-        public Student Post([FromBody] Student student)
+        public StudentDto Post([FromBody] StudentDto studentDto)
         {
-            return _dbService.AddStudent(student);
+            return _dbService.AddStudent(studentDto.ToStudent()).ToDto();
         }
 
         // PUT api/<StudentController>/5
@@ -46,8 +47,9 @@ namespace WebApi_BasicAuthentication.Controllers
 
         // DELETE api/<StudentController>/5
         [HttpDelete("{pkid}")]
-        public void Delete(int id)
+        public void Delete(int pkid)
         {
+            _dbService.RemoveStudent(pkid);
         }
     }
 }
