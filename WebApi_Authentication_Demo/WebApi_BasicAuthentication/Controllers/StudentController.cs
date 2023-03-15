@@ -35,7 +35,8 @@ namespace WebApi_BasicAuthentication.Controllers
         }
 
         // GET api/<StudentController>/5
-        [HttpGet("{pkid}")]
+        //这里的Name为该Action命名，方便之后在其他Action中执行跳转。
+        [HttpGet("{pkid}",Name ="GetStudentById")]
         public IActionResult Get(int pkid)
         {
             try

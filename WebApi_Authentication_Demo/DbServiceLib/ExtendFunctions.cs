@@ -32,5 +32,29 @@ namespace DbServiceLib
                 return new StudentDto { Name = student.Name, Age = student.Age, Gender = student.Gender };
             }
         }
+
+        public static SubjectWithIdDto ToDtoWithId(this Subject subject)
+        {
+            if(subject is null)
+            {
+                return null;
+            }
+            else
+            {
+                return new SubjectWithIdDto { PkId = subject.PkId, Name = subject.Name, Description = subject.Description };
+            }
+        }
+
+        public static StudentWithIdDto ToDtoWithId(this Student student)
+        {
+            if(student is null )
+            {
+                return null;
+            }
+            else
+            {
+                return new StudentWithIdDto { Pkid = student.PkId, Name = student.Name, Age = student.Age, Gender = student.Gender };
+            }
+        }
     }
 }
