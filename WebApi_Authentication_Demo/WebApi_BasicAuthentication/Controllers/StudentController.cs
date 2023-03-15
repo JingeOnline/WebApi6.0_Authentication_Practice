@@ -36,9 +36,25 @@ namespace WebApi_BasicAuthentication.Controllers
 
         // GET api/<StudentController>/5
         [HttpGet("{pkid}")]
-        public StudentDto Get(int pkid)
+        public IActionResult Get(int pkid)
         {
-            return _dbService.GetStudent(pkid).ToDto();
+            try
+            {
+                Student student = _dbService.GetStudent(pkid);
+                if (student is null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(student.ToDto());
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         // POST api/<StudentController>
@@ -59,7 +75,7 @@ namespace WebApi_BasicAuthentication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                return StatusCode(500, "Internal server error");
             }
 
         }

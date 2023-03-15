@@ -34,9 +34,25 @@ namespace WebApi_BasicAuthentication.Controllers
 
         // GET api/<SubjectController>/5
         [HttpGet("{pkid}")]
-        public SubjectDto Get(int pkid)
+        public IActionResult Get(int pkid)
         {
-            return _dbService.GetSubject(pkid).ToDto();
+            try
+            {
+                Subject subject = _dbService.GetSubject(pkid);
+                if (subject is null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(subject.ToDto());
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         // POST api/<SubjectController>
