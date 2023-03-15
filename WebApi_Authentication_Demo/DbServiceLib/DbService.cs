@@ -1,4 +1,5 @@
 ﻿using DbServiceLib.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,25 +10,32 @@ namespace DbServiceLib
 {
     public class DbService : IDbService
     {
-        private static StudentManagementDbContext _context = new StudentManagementDbContext();
+        //private static StudentManagementDbContext _context = new StudentManagementDbContext();
 
+        //使用依赖注入来获取DbContext，注册位置在Program.cs文件中。
+        private readonly StudentManagementDbContext _context;
+
+        public DbService(StudentManagementDbContext context)
+        {
+            _context = context;
+        }
 
         public List<Student> GetStudentsAll()
         {
-            return _context.Students.ToList();
+            return _context.Students.AsNoTracking().ToList();
         }
         public List<Subject> GetSubjectsAll()
         {
-            return _context.Subjects.ToList();
+            return _context.Subjects.AsNoTracking().ToList();
         }
         public Student GetStudent(int pkid)
         {
-            return _context.Students.FirstOrDefault(x => x.PkId == pkid);
+            return _context.Students.AsNoTracking().FirstOrDefault(x => x.PkId == pkid);
 
         }
         public Subject GetSubject(int pkid)
         {
-            return _context.Subjects.FirstOrDefault(x => x.PkId == pkid);
+            return _context.Subjects.AsNoTracking().FirstOrDefault(x => x.PkId == pkid);
         }
         public Student AddStudent(Student student)
         {

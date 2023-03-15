@@ -1,14 +1,15 @@
 ﻿using DbServiceLib;
 using Microsoft.Extensions.DependencyInjection;
 
-var folder = Environment.CurrentDirectory;
-var parentFolder = Directory.GetParent(folder);
-Console.WriteLine(parentFolder.FullName);
+//var folder = Environment.CurrentDirectory;
+//var parentFolder = Directory.GetParent(folder);
+//Console.WriteLine(parentFolder.FullName);
 
 var builder = WebApplication.CreateBuilder(args);
 
 //添加依赖注入
 builder.Services.AddSingleton<IDbService, DbService>();
+builder.Services.AddTransient<StudentManagementDbContext>();
 
 // Add services to the container.
 builder.Services.AddControllers();

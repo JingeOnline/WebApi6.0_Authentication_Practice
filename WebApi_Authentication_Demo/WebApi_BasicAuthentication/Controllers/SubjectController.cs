@@ -13,14 +13,23 @@ namespace WebApi_BasicAuthentication.Controllers
     {
         private readonly IDbService _dbService;
 
-        public SubjectController(IDbService dbService) { 
-            _dbService= dbService;
+        public SubjectController(IDbService dbService)
+        {
+            _dbService = dbService;
         }
         // GET: api/<SubjectController>
         [HttpGet]
-        public IEnumerable<SubjectDto> Get()
+        public IActionResult Get()
         {
-            return _dbService.GetSubjectsAll().Select(x => x.ToDto());
+            try
+            {
+                IEnumerable<SubjectDto> subjectDtos = _dbService.GetSubjectsAll().Select(x => x.ToDto());
+                return Ok(subjectDtos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         // GET api/<SubjectController>/5
@@ -48,8 +57,8 @@ namespace WebApi_BasicAuthentication.Controllers
         [HttpDelete("{pkid}")]
         public IActionResult Delete(int pkid)
         {
-            string error= _dbService.RemoveSubject(pkid);
-            if(error==null)
+            string error = _dbService.RemoveSubject(pkid);
+            if (error == null)
             {
                 return Ok();
             }

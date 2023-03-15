@@ -36,9 +36,9 @@ namespace WebApi_BasicAuthentication.Controllers
 
         // GET api/<StudentController>/5
         [HttpGet("{pkid}")]
-        public StudentDto Get(int pkId)
+        public StudentDto Get(int pkid)
         {
-            return _dbService.GetStudent(pkId).ToDto();
+            return _dbService.GetStudent(pkid).ToDto();
         }
 
         // POST api/<StudentController>
