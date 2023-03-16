@@ -23,7 +23,7 @@ namespace WebApi_BasicAuthentication.Controllers
         {
             try
             {
-                IEnumerable<SubjectDto> subjectDtos = _dbService.GetSubjectsAll().Select(x => x.ToDto());
+                IEnumerable<SubjectWithIdDto> subjectDtos = _dbService.GetSubjectsAll().Select(x => x.ToDtoWithId());
                 return Ok(subjectDtos);
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace WebApi_BasicAuthentication.Controllers
                 }
                 else
                 {
-                    return Ok(subject.ToDto());
+                    return Ok(subject.ToDtoWithId());
                 }
             }
             catch (Exception ex)
@@ -74,14 +74,23 @@ namespace WebApi_BasicAuthentication.Controllers
         [HttpDelete("{pkid}")]
         public IActionResult Delete(int pkid)
         {
-            string error = _dbService.RemoveSubject(pkid);
-            if (error == null)
+            try
             {
-                return Ok();
+                Subject subject = _dbService.GetSubject(pkid);
+                if (subject is null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    _dbService.RemoveSubject(subject);
+                    return NoContent();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest(error);
+
+                return StatusCode(500, "Internal server error");
             }
         }
     }

@@ -122,5 +122,16 @@ namespace DbServiceLib
                 return $"The subject pkid={pkid} is not exist.";
             }
         }
+
+        public void RemoveStudent(Student student)
+        {
+            _context.Students.Remove(student);
+            _context.SaveChanges();
+        }
+        public void RemoveSubject(Subject subject)
+        {
+            _context.Subjects.Remove(subject);
+            _context.SaveChanges();
+        }
     }
 }

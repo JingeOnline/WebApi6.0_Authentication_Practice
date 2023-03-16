@@ -24,7 +24,7 @@ namespace WebApi_BasicAuthentication.Controllers
         {
             try
             {
-                IEnumerable<StudentDto> studentDtos=_dbService.GetStudentsAll().Select(x => x.ToDto());
+                IEnumerable<StudentWithIdDto> studentDtos=_dbService.GetStudentsAll().Select(x => x.ToDtoWithId());
                 return Ok(studentDtos);
             }
             catch (Exception ex)
@@ -48,7 +48,7 @@ namespace WebApi_BasicAuthentication.Controllers
                 }
                 else
                 {
-                    return Ok(student.ToDto());
+                    return Ok(student.ToDtoWithId());
                 }
             }
             catch (Exception ex)
@@ -91,14 +91,22 @@ namespace WebApi_BasicAuthentication.Controllers
         [HttpDelete("{pkid}")]
         public IActionResult Delete(int pkid)
         {
-            string error = _dbService.RemoveStudent(pkid);
-            if (error == null)
+            try
             {
-                return Ok();
+                Student student = _dbService.GetStudent(pkid);
+                if (student is null)
+                {
+                    return NotFound();//404
+                }
+                else
+                {
+                    _dbService.RemoveStudent(student);
+                    return NoContent();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest(error);
+                return StatusCode(500, "Internal server error");
             }
         }
     }

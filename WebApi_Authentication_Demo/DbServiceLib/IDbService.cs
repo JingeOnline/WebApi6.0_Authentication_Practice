@@ -18,5 +18,7 @@ namespace DbServiceLib
         Student UpdateStudent(Student student);
         string RemoveStudent(int pkid);
         string RemoveSubject(int pkid);
+        void RemoveStudent(Student student);
+        void RemoveSubject(Subject subject);
     }
 }
