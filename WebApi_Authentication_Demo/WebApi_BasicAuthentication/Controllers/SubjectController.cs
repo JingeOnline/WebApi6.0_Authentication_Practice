@@ -33,7 +33,7 @@ namespace WebApi_BasicAuthentication.Controllers
         }
 
         // GET api/<SubjectController>/5
-        //这里的Name为该Action命名，方便之后在其他Action中执行跳转。
+        //这里的Name为该路由命名，方便之后在其他Action中调用。
         [HttpGet("{pkid}",Name ="GetSubjectById")]
         public IActionResult Get(int pkid)
         {
@@ -51,16 +51,40 @@ namespace WebApi_BasicAuthentication.Controllers
             }
             catch (Exception ex)
             {
-
                 return StatusCode(500, "Internal server error");
             }
         }
 
         // POST api/<SubjectController>
         [HttpPost]
-        public SubjectDto Post([FromBody] SubjectDto subjectDto)
+        public IActionResult Post([FromBody] SubjectDto subjectDto)
         {
-            return _dbService.AddSubject(subjectDto.ToSubject()).ToDto();
+
+            try
+            {
+                if (subjectDto is null)
+                {
+                    return BadRequest("SubjectDto object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+
+                Subject subject = _dbService.AddSubject(subjectDto.ToSubject());
+
+                //三个参数：
+                //第一个参数指定路由的名称。（在每个Action上通过Name属性来设置）
+                //第二个参数指定路由中要传入的参数。(参数名大小写不敏感)
+                //指定好之后，会在Response Headers中创建一条location字段，【location: http://localhost:5000/api/Subject/6 】
+                //这样用户就能从header中获取刚刚创建的新对象的URL，方便他之后访问该对象。
+                //第三个参数才是指定当前Response body中返回的对象。
+                return CreatedAtRoute("GetSubjectById", new { PKID = subject.PkId },subject.ToDtoWithId()); //Code:201
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         // PUT api/<SubjectController>/5
@@ -79,7 +103,7 @@ namespace WebApi_BasicAuthentication.Controllers
                 Subject subject = _dbService.GetSubject(pkid);
                 if (subject is null)
                 {
-                    return NotFound();
+                    return NotFound(); //Code:404
                 }
                 else
                 {

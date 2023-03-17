@@ -64,15 +64,23 @@ namespace WebApi_BasicAuthentication.Controllers
         {
             try
             {
-                StudentDto dto = _dbService.AddStudent(studentDto.ToStudent()).ToDto();
-                if (dto != null)
+                if (studentDto is null)
                 {
-                    return Ok(dto);
+                    return BadRequest("StudentDto object is null");
                 }
-                else
+                if (!ModelState.IsValid)
                 {
-                    return BadRequest();
+                    return BadRequest("Invalid model object");
                 }
+
+                Student student = _dbService.AddStudent(studentDto.ToStudent());
+                //三个参数：
+                //第一个参数指定路由的名称。（在每个Action上通过Name属性来设置）
+                //第二个参数指定路由中要传入的参数。(参数名大小写不敏感)
+                //指定好之后，会在Response Headers中创建一条location字段，【location: http://localhost:5000/api/Subject/6 】
+                //这样用户就能从header中获取刚刚创建的新对象的URL，方便他之后访问该对象。
+                //第三个参数才是指定当前Response body中返回的对象。
+                return CreatedAtRoute("GetStudentById", new { pkid = student.PkId }, student.ToDtoWithId());
             }
             catch (Exception ex)
             {
