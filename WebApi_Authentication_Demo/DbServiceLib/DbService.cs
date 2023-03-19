@@ -80,6 +80,21 @@ namespace DbServiceLib
                 return null;
             }
         }
+        public Subject UpdateSubject(Subject subject)
+        {
+            Subject sub=_context.Subjects.FirstOrDefault(x=>x.PkId== subject.PkId);
+            if(subject!=null)
+            {
+                sub.Name = subject.Name;
+                sub.Description= subject.Description;
+                _context.SaveChanges();
+                return sub;
+            }
+            else
+            {
+                return null;
+            }
+        }
         public string RemoveStudent(int pkid)
         {
             Student student = _context.Students.FirstOrDefault(x => x.PkId == pkid);

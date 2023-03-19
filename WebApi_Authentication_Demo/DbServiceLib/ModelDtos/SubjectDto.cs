@@ -20,5 +20,10 @@ namespace DbServiceLib.ModelDtos
         {
             return new Subject { Name = Name, Description = Description };
         }
+
+        public Subject ToSubject(int pkid)
+        {
+            return new Subject {PkId=pkid, Name = Name, Description = Description };
+        }
     }
 }

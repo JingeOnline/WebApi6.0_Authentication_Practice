@@ -20,7 +20,11 @@ namespace DbServiceLib.ModelDtos
 
         public Student ToStudent()
         {
-            return new Student {Name = Name, Gender=Gender, Age=Age};
+            return new Student {Name = Name, Gender = Gender, Age = Age };
+        }
+        public Student ToStudent(int pkid)
+        {
+            return new Student {PkId=pkid, Name = Name, Gender=Gender, Age=Age};
         }
     }
 }

@@ -91,8 +91,30 @@ namespace WebApi_BasicAuthentication.Controllers
 
         // PUT api/<StudentController>/5
         [HttpPut("{pkid}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int pkid, [FromBody] StudentDto studentDto)
         {
+            try
+            {
+                if (studentDto is null)
+                {
+                    return BadRequest("Student object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+                Student student = _dbService.GetStudent(pkid);
+                if (student is null)
+                {
+                    return NotFound(); //404
+                }
+                _dbService.UpdateStudent(studentDto.ToStudent(pkid));
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         // DELETE api/<StudentController>/5
