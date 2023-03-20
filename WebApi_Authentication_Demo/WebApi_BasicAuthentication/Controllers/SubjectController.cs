@@ -1,12 +1,14 @@
 ﻿using DbServiceLib;
 using DbServiceLib.ModelDtos;
 using DbServiceLib.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApi_BasicAuthentication.Controllers
 {
+    [Authorize] //可以放在Controller上也可以放在Action上。控制是否需要身份验证才能访问。
     [Route("api/[controller]")]
     [ApiController]
     public class SubjectController : ControllerBase
