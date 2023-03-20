@@ -1,5 +1,7 @@
 ﻿using DbServiceLib;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using WebApi_BasicAuthentication.Authentication;
 
 //var folder = Environment.CurrentDirectory;
 //var parentFolder = Directory.GetParent(folder);
@@ -10,12 +12,18 @@ var builder = WebApplication.CreateBuilder(args);
 //添加依赖注入
 builder.Services.AddSingleton<IDbService, DbService>();
 builder.Services.AddTransient<StudentManagementDbContext>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//添加Basic Authentication
+builder.Services.AddAuthentication("BasicAuthentication")
+    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>
+    ("BasicAuthentication",null);
 
 var app = builder.Build();
 
@@ -25,6 +33,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+//添加Authentication中间件
+app.UseAuthentication();
 
 app.UseAuthorization();
 

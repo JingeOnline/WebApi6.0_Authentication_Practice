@@ -1,6 +1,7 @@
 ﻿using DbServiceLib;
 using DbServiceLib.ModelDtos;
 using DbServiceLib.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,6 +20,7 @@ namespace WebApi_BasicAuthentication.Controllers
 
 
         // GET: api/<StudentController>
+        [Authorize]
         [HttpGet]
         public IActionResult Get()
         {
