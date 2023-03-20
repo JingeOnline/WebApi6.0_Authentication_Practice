@@ -20,7 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//添加Basic Authentication
+//注册Basic Authentication服务
 builder.Services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>
     ("BasicAuthentication",null);
@@ -33,8 +33,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//添加Authentication中间件
+//还需要启用Authentication中间件
 app.UseAuthentication();
+//---------------------------
 
 app.UseAuthorization();
 
