@@ -36,7 +36,7 @@ namespace WebApi_BasicAuthentication.Authentication
                 string credentialsAsEncodedString = Encoding.UTF8.GetString(Convert.FromBase64String(token));
                 //用户名和密码之间默认使用冒号进行分割
                 string[] credentials = credentialsAsEncodedString.Split(':');
-                //去数据库中验证用户名和密码是否正确
+                //去数据库User表中验证用户名和密码是否正确
                 if (_userRepository.Authenticate(credentials[0], credentials[1]))
                 {
                     Claim[] claims = new[] { new Claim("name", credentials[0]), new Claim(ClaimTypes.Role, "Admin") };
