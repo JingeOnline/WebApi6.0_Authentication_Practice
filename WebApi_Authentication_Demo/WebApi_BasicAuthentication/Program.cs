@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using WebApi_BasicAuthentication.Authentication;
 
-//var folder = Environment.CurrentDirectory;
-//var parentFolder = Directory.GetParent(folder);
-//Console.WriteLine(parentFolder.FullName);
+///使用Basic Authentication，服务器端在用户不关闭浏览器的情况下，并没有一种有效的方法来让用户注销。
+///用户自己想要注销登录，也只能关闭浏览器。
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 //还需要启用Authentication中间件
 app.UseAuthentication();
 //---------------------------

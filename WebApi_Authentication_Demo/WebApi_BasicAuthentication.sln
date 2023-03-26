@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi_BasicAuthentication", "WebApi_BasicAuthentication\WebApi_BasicAuthentication.csproj", "{7177B1E8-7E22-4A8B-A1CF-38539B7EC80F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi_BasicAuthentication", "WebApi_BasicAuthentication\WebApi_BasicAuthentication.csproj", "{7177B1E8-7E22-4A8B-A1CF-38539B7EC80F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbServiceLib", "DbServiceLib\DbServiceLib.csproj", "{95D3F52C-E3DA-4B3F-9538-4161A5ED434B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbServiceLib", "DbServiceLib\DbServiceLib.csproj", "{95D3F52C-E3DA-4B3F-9538-4161A5ED434B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi_JwtAuthentication", "WebApi_JwtAuthentication\WebApi_JwtAuthentication.csproj", "{FEC48C63-4C97-446F-B7A8-9BB66F0B36C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{95D3F52C-E3DA-4B3F-9538-4161A5ED434B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95D3F52C-E3DA-4B3F-9538-4161A5ED434B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95D3F52C-E3DA-4B3F-9538-4161A5ED434B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEC48C63-4C97-446F-B7A8-9BB66F0B36C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEC48C63-4C97-446F-B7A8-9BB66F0B36C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEC48C63-4C97-446F-B7A8-9BB66F0B36C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEC48C63-4C97-446F-B7A8-9BB66F0B36C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

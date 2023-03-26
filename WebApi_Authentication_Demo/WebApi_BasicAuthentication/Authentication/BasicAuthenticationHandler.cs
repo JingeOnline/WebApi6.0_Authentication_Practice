@@ -39,7 +39,10 @@ namespace WebApi_BasicAuthentication.Authentication
                 //去数据库User表中验证用户名和密码是否正确
                 if (_userRepository.Authenticate(credentials[0], credentials[1]))
                 {
-                    Claim[] claims = new[] { new Claim("name", credentials[0]), new Claim(ClaimTypes.Role, "Admin") };
+                    Claim[] claims = new[] { 
+                        new Claim(ClaimTypes.Name, credentials[0]), 
+                        new Claim(ClaimTypes.Role, "Admin") 
+                    };
                     ClaimsIdentity identity = new ClaimsIdentity(claims, "Basic");
                     ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
                     return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name)));
