@@ -9,8 +9,8 @@ using WebApi_BasicAuthentication.Authentication;
 var builder = WebApplication.CreateBuilder(args);
 
 //添加依赖注入
-builder.Services.AddSingleton<IDbService, DbService>();
-builder.Services.AddTransient<StudentManagementDbContext>();
+builder.Services.AddScoped<IDbService, DbService>();
+builder.Services.AddScoped<StudentManagementDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Add services to the container.

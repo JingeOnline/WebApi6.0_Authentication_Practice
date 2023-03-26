@@ -14,6 +14,7 @@ namespace WebApi_BasicAuthentication.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IDbService _dbService;
+
         public StudentController(IDbService dbService)
         {
             _dbService = dbService;
@@ -21,13 +22,12 @@ namespace WebApi_BasicAuthentication.Controllers
 
 
         // GET: api/<StudentController>
-        
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                IEnumerable<StudentWithIdDto> studentDtos=_dbService.GetStudentsAll().Select(x => x.ToDtoWithId());
+                IEnumerable<StudentWithIdDto> studentDtos = _dbService.GetStudentsAll().Select(x => x.ToDtoWithId());
                 return Ok(studentDtos);
             }
             catch (Exception ex)
