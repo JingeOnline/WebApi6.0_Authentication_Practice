@@ -3,9 +3,11 @@ using DbServiceLib.Models;
 using DbServiceLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi_JwtAuthentication.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SubjectController : ControllerBase

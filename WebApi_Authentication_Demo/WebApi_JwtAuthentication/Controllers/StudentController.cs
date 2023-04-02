@@ -1,11 +1,13 @@
 ﻿using DbServiceLib;
 using DbServiceLib.ModelDtos;
 using DbServiceLib.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi_JwtAuthentication.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase

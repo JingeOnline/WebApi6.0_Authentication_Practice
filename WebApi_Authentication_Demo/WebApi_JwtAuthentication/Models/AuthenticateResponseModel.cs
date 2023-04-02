@@ -1,5 +1,8 @@
 ﻿namespace WebApi_JwtAuthentication.Models
 {
+    /// <summary>
+    /// 用户登录成功时返回的Model
+    /// </summary>
     public class AuthenticateResponseModel
     {
         public int Id { get; set; }
