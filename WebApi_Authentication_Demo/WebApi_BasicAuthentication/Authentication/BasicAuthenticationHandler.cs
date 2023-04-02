@@ -39,14 +39,19 @@ namespace WebApi_BasicAuthentication.Authentication
                 //去数据库User表中验证用户名和密码是否正确
                 if (_userRepository.Authenticate(credentials[0], credentials[1]))
                 {
-                    //创建Claim
+                    //创建Claim，相当于证件上的词条
                     Claim[] claims = new[] { 
                         new Claim(ClaimTypes.Name, credentials[0]), 
                         new Claim(ClaimTypes.Role, "Admin") //这个Role可以去掉，因为在当前项目中没用到。
                     };
+                    //创建CalimsIdentity，相当于创建一个证件
                     ClaimsIdentity identity = new ClaimsIdentity(claims, "Basic");
+                    //创建ClaimsPrincipal，相当于创建一个用户，也就是该证件的持有者
                     ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
-                    return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name)));
+                    //创建一个Ticket，相当于给被创建的用户发放了一张入场券。
+                    //Scheme.Name在这里的值为“BasicAuthentication”，该值在Program.cs类中注册Authentication服务的时候，手动指定。
+                    AuthenticationTicket ticket = new AuthenticationTicket(claimsPrincipal, Scheme.Name);
+                    return Task.FromResult(AuthenticateResult.Success(ticket));
                 }
                 else
                 {

@@ -23,6 +23,7 @@ namespace WebApi_BasicAuthentication.Controllers
 
         // GET: api/<StudentController>
         [HttpGet]
+        //这里还可以把方法的返回值类型设置为ActionResult<StudentWithIdDto>。 ActionResult 类型是 ASP.NET Core 中所有操作结果的基类。
         public IActionResult Get()
         {
             try
@@ -38,7 +39,7 @@ namespace WebApi_BasicAuthentication.Controllers
         }
 
         // GET api/<StudentController>/5
-        //这里的Name为该Action命名，方便之后在其他Action中执行跳转。
+        //这里的Name为该Action命名，方便之后在其他Action中调用，比如执行跳转。
         [HttpGet("{pkid}",Name ="GetStudentById")]
         public IActionResult Get(int pkid)
         {
@@ -69,7 +70,7 @@ namespace WebApi_BasicAuthentication.Controllers
             {
                 if (studentDto is null)
                 {
-                    return BadRequest("StudentDto object is null");
+                    return BadRequest("StudentDto object is null");  //400,错误信息会被放在ResponseBody->error中
                 }
                 if (!ModelState.IsValid)
                 {
@@ -84,6 +85,10 @@ namespace WebApi_BasicAuthentication.Controllers
                 //这样用户就能从header中获取刚刚创建的新对象的URL，方便他之后访问该对象。
                 //第三个参数才是指定当前Response body中返回的对象。
                 return CreatedAtRoute("GetStudentById", new { pkid = student.PkId }, student.ToDtoWithId());
+
+
+                //此处还可以使用CreatedAtAction，直接调用Action，不需要指定route name
+                //return CreatedAtAction(nameof(Get), new { pkid = student.PkId }, student.ToDtoWithId());
             }
             catch (Exception ex)
             {
@@ -112,7 +117,7 @@ namespace WebApi_BasicAuthentication.Controllers
                     return NotFound(); //404
                 }
                 _dbService.UpdateStudent(studentDto.ToStudent(pkid));
-                return NoContent();
+                return NoContent(); //204
             }
             catch (Exception ex)
             {
@@ -134,7 +139,7 @@ namespace WebApi_BasicAuthentication.Controllers
                 else
                 {
                     _dbService.RemoveStudent(student);
-                    return NoContent();
+                    return NoContent(); //204
                 }
             }
             catch (Exception ex)

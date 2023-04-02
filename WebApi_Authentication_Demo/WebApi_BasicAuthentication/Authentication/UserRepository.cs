@@ -6,8 +6,8 @@ namespace WebApi_BasicAuthentication.Authentication
     {
         private List<User> _users = new List<User>()
         {
-            new User(){Id=1,Name="jzhang",Password="123456" },
-            new User(){Id=2, Name="qxiao",Password="888888"},
+            new User(){Id=1,Name="jzhang",Password="121212" },
+            new User(){Id=2, Name="qxiao",Password="121212"},
         };
 
         public bool Authenticate(string username, string password)
