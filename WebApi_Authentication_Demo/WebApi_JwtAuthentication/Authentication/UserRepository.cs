@@ -53,7 +53,7 @@ namespace WebApi_JwtAuthentication.Authentication
                 //设置ClaimsIdentity
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
                 //设置有效期为100秒
-                Expires = DateTime.UtcNow.AddSeconds(100),
+                Expires = DateTime.UtcNow.AddSeconds(30),
                 //添加签名
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), //签名的密钥

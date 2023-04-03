@@ -17,12 +17,14 @@ namespace WebApi_JwtAuthentication.Controllers
         }
 
         [HttpPost]
-        public IActionResult Authenticate([FromBody]AuthenticateRequestModel request)
+        public IActionResult Authenticate([FromBody] AuthenticateRequestModel request)
         {
-            AuthenticateResponseModel response=_userRepository.Authenticate(request);
-            if(response==null)
+            AuthenticateResponseModel response = _userRepository.Authenticate(request);
+            if (response == null)
             {
-                return BadRequest(new {message="Username or password is incorrect."});
+                //返回400 Bad Request
+                //后面添加的信息会以JSON格式显示在Body中：{"message": "Username or password is incorrect."}
+                return BadRequest(new { message = "Username or password is incorrect." });
             }
             else
             {
