@@ -91,7 +91,7 @@ builder.Services.AddAuthentication(opt => {
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.在配置完Swagger后，需要手动把它添加到pipeline中。
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()) //这句话在当前项目中没什么用
 {
     app.UseSwagger();
     app.UseSwaggerUI(options =>
