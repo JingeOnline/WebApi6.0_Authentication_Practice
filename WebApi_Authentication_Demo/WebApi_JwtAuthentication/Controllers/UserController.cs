@@ -23,8 +23,8 @@ namespace WebApi_JwtAuthentication.Controllers
             if (response == null)
             {
                 //返回400 Bad Request
-                //后面添加的信息会以JSON格式显示在Body中：{"message": "Username or password is incorrect."}
-                return BadRequest(new { message = "Username or password is incorrect." });
+                //后面添加的信息会以JSON格式显示在Body中
+                return BadRequest(new {Status="Fail", Message = "Username or password is incorrect." });
             }
             else
             {

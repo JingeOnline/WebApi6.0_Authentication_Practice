@@ -2,6 +2,7 @@ using DbServiceLib;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Data;
 using System.Text;
 using WebApi_JwtAuthentication.Authentication;
 using WebApi_JwtAuthentication.Models;
@@ -23,7 +24,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IDbService, DbService>();
 builder.Services.AddScoped<StudentManagementDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-//从appsettings.json文件中，读取储存的对象和值
+
+//从appsettings.json文件中，读取储存的对象和值。密钥的最小长度为128bit，16Bytes。
+//把该自读读出来后转换成对象，然后被添加到依赖注入中。
 builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JwtSetting"));
 
 
@@ -38,15 +41,15 @@ builder.Services.AddSwaggerGen(options =>
         {
             Version = "V1",
             Title = "WebAPI JWT Authentication",
-            Description = "Product WebAPI"
+            Description = "WebAPI JWT Authentication Description"
         });
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
             Scheme = "Bearer",
-            BearerFormat = "JWT",
-            In = ParameterLocation.Header,
-            Name = "Authorization",
-            Description = "Bearer Authentication with JWT Token",
+            BearerFormat = "JWT Bearer Token SHA-256", //这个字段不知道显示在哪里
+            In = ParameterLocation.Header,  //定义请求时，API密钥的位置
+            Name = "Authorization",  //定义密钥的参数名
+            Description = "Bearer Authentication with JWT Token using SHA-256", //显示的描述信息
             Type = SecuritySchemeType.Http
         });
         options.AddSecurityRequirement(new OpenApiSecurityRequirement {
@@ -62,12 +65,14 @@ builder.Services.AddSwaggerGen(options =>
         });
 });
 
+//配置JWT认证中间件
 builder.Services.AddAuthentication(opt => {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     }).AddJwtBearer(options => {
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        //配置JWT验证
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateLifetime = true,
@@ -95,7 +100,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-
+//添加认证中间件
 app.UseAuthentication();
 app.UseAuthorization();
 

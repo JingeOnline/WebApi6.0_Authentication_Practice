@@ -44,6 +44,11 @@ namespace WebApi_JwtAuthentication.Authentication
             }
         }
 
+        /// <summary>
+        /// 以字符串的形式返回Token
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         private string generateJwtToken(User user)
         {
             //以字节的形式获取加密密钥
@@ -57,7 +62,7 @@ namespace WebApi_JwtAuthentication.Authentication
                 //添加签名
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), //签名的密钥
-                    SecurityAlgorithms.HmacSha256Signature  //加密算法
+                    SecurityAlgorithms.HmacSha256Signature  //加密算法,基于SHA-256（这里不要用Base64，Base64不使用密钥，可以直接被解码。）
                     )
             };
 
