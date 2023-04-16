@@ -33,7 +33,8 @@ namespace WebApi_BasicAuthentication.Controllers
             return Ok(userNames);
         }
 
-        //这个Action是用来测试读取客户端的cookie
+        //这个Action是用来测试读取客户端的cookie.
+        //测试结果，如果cookie没有过期，是可以读取到的。如果过期了，cookie在浏览器中就被删除了，就无法被读取到了。string test=null。
         [HttpGet]
         [Route("cookie")]
         public IActionResult GetCookie()
