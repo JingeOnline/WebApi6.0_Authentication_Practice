@@ -23,7 +23,7 @@ namespace WebApi_BasicAuthentication.Controllers
             //该代码是用来测试在Response中添加cookie -------------------------------------
             CookieOptions cookieOptions = new CookieOptions()
             {
-                HttpOnly = true,
+                HttpOnly = true, //当设置为true的时候，客户端的javascript无法访问。但是使用Postman还是可以查看和修改Cookie的。
                 Expires = DateTime.Now.AddMinutes(1)
             };
             Response.Cookies.Append("Test", $"This is a test cooky, will expired at {cookieOptions.Expires}.", cookieOptions);
