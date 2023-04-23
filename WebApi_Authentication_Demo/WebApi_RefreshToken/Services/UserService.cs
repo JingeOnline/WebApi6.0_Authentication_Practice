@@ -12,7 +12,7 @@ namespace WebApi_RefreshToken.Services
         private IJwtUtils _jwtUtils;
         private readonly AppSettings _appSettings;
 
-        public UserService(DataContext context,IJwtUtils jwtUtils,IOptions<AppSettings> appSettings)
+        public UserService(DataContext context, IJwtUtils jwtUtils, IOptions<AppSettings> appSettings)
         {
             _context = context;
             _jwtUtils = jwtUtils;
@@ -28,7 +28,7 @@ namespace WebApi_RefreshToken.Services
         /// <exception cref="AppException"></exception>
         public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
         {
-            var user = _context.Users.Include(x=>x.RefreshTokens).SingleOrDefault(x => x.Username == model.Username);
+            var user = _context.Users.Include(x => x.RefreshTokens).SingleOrDefault(x => x.Username == model.Username);
 
             // validate
             //if (user == null || !BCrypt.Verify(model.Password, user.PasswordHash))
@@ -39,9 +39,9 @@ namespace WebApi_RefreshToken.Services
 
             //Revoke old RefreshToken
             IEnumerable<RefreshToken> oldRefreshTokens = user.RefreshTokens.Where(x => x.IsActive == true);
-            foreach(RefreshToken rft in oldRefreshTokens)
+            foreach (RefreshToken rft in oldRefreshTokens)
             {
-                setRevokeRefreshToken(rft,ipAddress,"User login.");
+                setRevokeRefreshToken(rft, ipAddress, "User login.");
             }
 
 
@@ -52,10 +52,10 @@ namespace WebApi_RefreshToken.Services
 
 
             // save changes to db
-            _context.Update(user);
+            //_context.Update(user);
             _context.SaveChanges();
 
-            return new AuthenticateResponse(user, jwtToken, refreshToken.Token);
+            return new AuthenticateResponse(user, jwtToken, refreshToken.Token, _appSettings);
         }
 
         /// <summary>
@@ -71,12 +71,12 @@ namespace WebApi_RefreshToken.Services
             var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
 
             if (!refreshToken.IsActive)
-                throw new AppException("Invalid token, the token already expired or revoked.");
+                throw new AppException("Invalid refresh token, the token already expired or revoked. Please log in.");
 
             // generate new jwt
             var jwtToken = _jwtUtils.GenerateJwtToken(user);
 
-            return new AuthenticateResponse(user, jwtToken, refreshToken.Token);
+            return new AuthenticateResponse(user, jwtToken, refreshToken.Token, _appSettings);
         }
 
         /// <summary>
@@ -88,9 +88,13 @@ namespace WebApi_RefreshToken.Services
         /// <exception cref="AppException"></exception>
         public void RevokeToken(string token, string ipAddress)
         {
-            //var user = getUserByRefreshToken(token);
-            //var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
-            RefreshToken refreshToken = _context.RefreshTokens.Single(x => x.Token == token);
+
+            RefreshToken refreshToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == token);
+            if (refreshToken == null)
+            {
+                throw new AppException("The refresh token is no exist.");
+            }
+
             if (!refreshToken.IsActive)
             {
                 throw new AppException("Invalid token, the token already expired or revoked.");

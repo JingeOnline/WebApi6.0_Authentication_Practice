@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -15,9 +16,7 @@ namespace WebApi_RefreshToken.Authorization
         private DataContext _context;
         private readonly AppSettings _appSettings;
 
-        public JwtUtils(
-            DataContext context,
-            IOptions<AppSettings> appSettings)
+        public JwtUtils(DataContext context,IOptions<AppSettings> appSettings)
         {
             _context = context;
             _appSettings = appSettings.Value;
@@ -31,7 +30,7 @@ namespace WebApi_RefreshToken.Authorization
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(_appSettings.JwtTokenTTL_Minutes),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -75,23 +74,24 @@ namespace WebApi_RefreshToken.Authorization
             var refreshToken = new RefreshToken
             {
                 Token = getUniqueToken(),
-                // token is valid for 7 days
-                ExpireAt = DateTime.UtcNow.AddDays(7),
+                //Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                ExpireAt = DateTime.UtcNow.AddDays(_appSettings.RefreshTokenTTL_Days),
                 CreateAt = DateTime.UtcNow,
                 CreatedByIp = ipAddress
             };
-
+            Debug.WriteLine($"RefreshToken={refreshToken.Token}");
             return refreshToken;
 
             string getUniqueToken()
             {
                 // token is a cryptographically strong random sequence of values
-                var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-                // ensure token is unique by checking against db
-                var tokenIsUnique = !_context.Users.Any(u => u.RefreshTokens.Any(t => t.Token == token));
+                byte[] bytes = RandomNumberGenerator.GetBytes(64);
 
-                if (!tokenIsUnique)
-                    return getUniqueToken();
+                //这里不要使用Base64,因为普通的Base64包含'/','='等特殊符号，在储存到Cookie中时，会被进行URL编码，变成%4%等字符。
+                //之后在匹配的时候，会造成cookie中的Tooken值和数据库中的Tooken值不一致。
+                //使用Base64UrlEncoder编码和解码就能避免出现这些特殊字符。
+                string token = Base64UrlEncoder.Encode(bytes);
+                //string token=Convert.ToBase64String(bytes); //不要使用
 
                 return token;
             }

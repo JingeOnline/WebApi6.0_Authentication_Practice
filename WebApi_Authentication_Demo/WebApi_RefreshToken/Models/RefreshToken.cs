@@ -19,8 +19,8 @@ namespace WebApi_RefreshToken.Models
         public string CreatedByIp { get; set; }
         public DateTime ExpireAt { get; set; }
         public DateTime? RevokeAt { get; set; }
-        public string RevokedByIp { get; set; }
-        public string ReasonRevoked { get; set; }
+        public string? RevokedByIp { get; set; }
+        public string? ReasonRevoked { get; set; }
 
         [NotMapped]
         public bool IsExpired => DateTime.UtcNow >= ExpireAt;
