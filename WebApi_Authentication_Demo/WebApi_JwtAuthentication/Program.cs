@@ -14,9 +14,10 @@ using WebApi_JwtAuthentication.Models;
 //从appsetting中获取键值对，可以参考这个 https://www.infoworld.com/article/3669188/how-to-implement-jwt-authentication-in-aspnet-core-6.html
 
 //发送登录请求的时候[POST]http://localhost:5000/api/user
-//在Postman中测试的时候：Body中选择raw，格式选择JSON，然后发送用户名和密码即可。
+//在Postman中测试登录的时候：Body中选择raw，格式选择JSON，然后发送用户名和密码即可。
 
 //在访问需要验证的页面时，PostMan中Auth选择Bearer Token，然后把Token复制进去即可。
+//或者在Headers中添加Authorization,值为"Bearer【空格】【Token字符串】"
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,42 +35,67 @@ builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JwtSett
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//配置Swagger
+//配置Swagger,允许在Swagger中使用JWT Token
 builder.Services.AddSwaggerGen(options =>
 {
-        options.SwaggerDoc("V1", new OpenApiInfo
+    options.SwaggerDoc("V1", new OpenApiInfo
+    {
+        Version = "V1",
+        Title = "WebAPI JWT Authentication",
+        Description = "WebAPI JWT Authentication Description"
+    });
+
+    //写法1：
+    var scheme = new OpenApiSecurityScheme()
+    {
+        Scheme = "Bearer",
+        BearerFormat = "JWT Bearer Token SHA-256", //这个字段不知道显示在哪里
+        In = ParameterLocation.Header,  //定义发起请求时，Authentication字段的位置
+        Name = "Authorization",  //定义请求时报文头中的Key
+        Description = "Bearer Authentication with JWT Token using SHA-256", //显示的描述信息
+        Type = SecuritySchemeType.Http,   //验证类型，是个枚举值
+        Reference = new OpenApiReference
         {
-            Version = "V1",
-            Title = "WebAPI JWT Authentication",
-            Description = "WebAPI JWT Authentication Description"
-        });
-        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            Scheme = "Bearer",
-            BearerFormat = "JWT Bearer Token SHA-256", //这个字段不知道显示在哪里
-            In = ParameterLocation.Header,  //定义请求时，API密钥的位置
-            Name = "Authorization",  //定义密钥的参数名
-            Description = "Bearer Authentication with JWT Token using SHA-256", //显示的描述信息
-            Type = SecuritySchemeType.Http
-        });
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement {
-        {
-            new OpenApiSecurityScheme {
-                Reference = new OpenApiReference {
-                    Id = "Bearer",
-                    Type = ReferenceType.SecurityScheme
-                }
-            },
-            new List < string > ()
+            Id = "Bearer",
+            Type = ReferenceType.SecurityScheme
         }
-        });
+    };
+    options.AddSecurityDefinition("Bearer",scheme);
+    var requirement = new OpenApiSecurityRequirement();
+    requirement[scheme] = new List<string>();
+    options.AddSecurityRequirement(requirement);
+
+    //写法2：
+    //options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    //{
+    //    Scheme = "Bearer",
+    //    BearerFormat = "JWT Bearer Token SHA-256", //这个字段不知道显示在哪里
+    //    In = ParameterLocation.Header,  //定义请求时，API密钥的位置
+    //    Name = "Authorization",  //定义密钥的参数名
+    //    Description = "Bearer Authentication with JWT Token using SHA-256", //显示的描述信息
+    //    Type = SecuritySchemeType.Http
+    //});
+    //options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+    //    {
+    //        new OpenApiSecurityScheme {
+    //            Reference = new OpenApiReference {
+    //                Id = "Bearer",
+    //                Type = ReferenceType.SecurityScheme
+    //            }
+    //        },
+    //        new List < string > ()
+    //    }
+    //    });
 });
 
 //配置JWT认证中间件
-builder.Services.AddAuthentication(opt => {
+//如果用户在没有登录的情况下直接访问需要Authorize的地址，会返回401 Unauthorized，表示没有权限调用该接口。
+builder.Services.AddAuthentication(opt =>
+{
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(options => {
+}).AddJwtBearer(options =>
+{
     options.TokenValidationParameters = new TokenValidationParameters
     {
         //配置JWT验证
@@ -100,7 +126,7 @@ if (app.Environment.IsDevelopment()) //这句话在当前项目中没什么用
     });
 }
 
-//添加认证中间件
+//添加认证中间件(必须写在Authorization之前)
 app.UseAuthentication();
 app.UseAuthorization();
 

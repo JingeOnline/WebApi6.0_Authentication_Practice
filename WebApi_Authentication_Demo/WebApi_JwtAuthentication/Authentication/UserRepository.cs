@@ -53,12 +53,21 @@ namespace WebApi_JwtAuthentication.Authentication
         {
             //以字节的形式获取加密密钥
             byte[] key = Encoding.ASCII.GetBytes(_jwtSetting.SecretKey);
+
+            List<Claim> claimList = new List<Claim>() 
+            {
+                //ID
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                //Role, 想对某些角色进行访问控制，只需在Action上添加[Authorize(Roles="admin")]。
+                new Claim(ClaimTypes.Role, "admin")
+            };
+
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 //设置ClaimsIdentity
-                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+                Subject = new ClaimsIdentity(claimList),
                 //设置有效期为100秒
-                Expires = DateTime.UtcNow.AddSeconds(30),
+                Expires = DateTime.UtcNow.AddSeconds(300),
                 //添加签名
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), //签名的密钥

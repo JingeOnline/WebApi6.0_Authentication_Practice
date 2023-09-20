@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApi_BasicAuthentication.Controllers
 {
     [Authorize]  //可以放在Controller上也可以放在Action上。控制是否需要身份验证才能访问。
+    //如果Controller已经被设置为Authorize，可以通过在Action添加 [AllowAnonymous]来避免被验证。
+    //通过[Authorize(Roles="admin")]来进行角色控制。
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase

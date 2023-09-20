@@ -4,10 +4,13 @@ using DbServiceLib.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace WebApi_JwtAuthentication.Controllers
 {
-    [Authorize]
+    [Authorize]//如果Controller已经被设置为Authorize，可以通过在Action添加 [AllowAnonymous]来避免被验证。
+    //通过[Authorize(Roles="admin")]来进行角色控制。
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
@@ -26,6 +29,10 @@ namespace WebApi_JwtAuthentication.Controllers
         {
             try
             {
+                //可以在任意请求中获取植入到JWT Token中Payload部分的内容。
+                var claim=this.User.FindFirst(ClaimTypes.NameIdentifier);
+                Debug.WriteLine(claim.Value);
+                //-----------------------------------------------------
                 IEnumerable<StudentWithIdDto> studentDtos = _dbService.GetStudentsAll().Select(x => x.ToDtoWithId());
                 return Ok(studentDtos);
             }

@@ -4,6 +4,8 @@ using DbServiceLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace WebApi_JwtAuthentication.Controllers
 {
@@ -24,6 +26,10 @@ namespace WebApi_JwtAuthentication.Controllers
         {
             try
             {
+                //可以在任意请求中获取植入到JWT Token中Payload部分的内容。
+                var claim = this.User.FindFirst(ClaimTypes.NameIdentifier);
+                Debug.WriteLine(claim.Value);
+                //-------------------------------------------------------
                 IEnumerable<SubjectWithIdDto> subjectDtos = _dbService.GetSubjectsAll().Select(x => x.ToDtoWithId());
                 return Ok(subjectDtos);
             }
